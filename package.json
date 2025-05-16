@@ -1,0 +1,30 @@
+{
+  "name": "fragments-ui",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/most4f4/fragments-ui.git"
+  },
+  "author": "Mostafa Hasanalipourshahrabadi",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bootstrap": "^5.3.6",
+    "next": "15.3.2",
+    "oidc-client-ts": "^3.2.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.2"
+  }
+}
