@@ -1,5 +1,6 @@
 import { signIn, getUser } from "../auth";
 import { useState, useEffect } from "react";
+import { getUserFragments } from "../api";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -10,7 +11,15 @@ export default function Home() {
   };
 
   useEffect(() => {
-    getUser().then(setUser);
+    getUser().then(async (user) => {
+      setUser(user);
+
+      if (user) {
+        const fragments = await getUserFragments(user);
+        console.log("User fragments:", fragments);
+        // You can setFragments(fragments) later to display them
+      }
+    });
   }, []);
 
   return (
