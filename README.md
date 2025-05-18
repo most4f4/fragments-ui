@@ -1,40 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Fragments UI
 
-## Getting Started
+A simple **React + Next.js** frontend for testing and interacting with the secure fragments microservice using **Amazon Cognito** for user authentication and **OIDC (OpenID Connect)**.
 
-First, run the development server:
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/most4f4/fragments-ui.git
+cd fragments-ui
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Environment Configuration
+
+Create a `.env.local` file in the root directory:
+
+```
+NEXT_PUBLIC_AWS_COGNITO_POOL_ID=us-east-1_abc123
+NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID=xyz456exampleclientid
+NEXT_PUBLIC_COGNITO_DOMAIN=your-cognito-domain.auth.us-east-1.amazoncognito.com
+NEXT_PUBLIC_OAUTH_SIGN_IN_REDIRECT_URL=http://localhost:3000
+API_URL=http://localhost:8080
+```
+
+---
+
+## 🧪 Testing Auth Flow
+
+1. Run the frontend:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Open browser: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+3. Click **Login** — user will be redirected to Cognito Hosted UI.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+4. After successful login, the app will:
+   - Display the user's email/username
+   - Call the fragments microservice with the Bearer token
+   - Log response to browser console
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔐 Authentication
 
-## Learn More
+Authentication is handled via **Amazon Cognito** using the **Authorization Code Flow with PKCE**.
 
-To learn more about Next.js, take a look at the following resources:
+- User logs in via the Hosted UI
+- Cognito redirects back to the app with `?code=...`
+- `oidc-client-ts` exchanges it for tokens
+- Authenticated requests are sent to the backend using:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+```http
+Authorization: Bearer <id_token>
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+/src
+├── pages/
+│   └── index.js       # Main app page
+├── api.js             # Handles fetch to secure backend route
+├── auth.js            # Handles signinRedirect, token parsing, and user formatting
+├── components/
+│   └── Login.jsx      # Optional login form using Amplify UI components
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+---
+
+## 🧰 Packages & Libraries
+
+- **Next.js:** React framework for SSR and routing
+- **React:** UI rendering
+- **oidc-client-ts:** Handles OAuth2 PKCE login flow
+- **@aws-amplify/ui-react:** Optional pre-built UI components
+- **dotenv:** Loads env variables (CLI only)
+
+---
+
+## ✅ Example Secure Request
+
+```js
+const res = await fetch("http://localhost:8080/v1/fragments", {
+  headers: user.authorizationHeaders(),
+});
+```
+
+---
+
+## 📸 Notes
+
+- Fragments UI is meant for **testing auth flows** and **sending secure API calls**
+- It is not a production-ready frontend
+- Uses memory storage (not localStorage) for tokens by default
