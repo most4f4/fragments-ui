@@ -72,22 +72,34 @@ Authorization: Bearer <id_token>
 ```
 /src
 ├── pages/
-│   └── index.js       # Main app page
-├── api.js             # Handles fetch to secure backend route
-├── auth.js            # Handles signinRedirect, token parsing, and user formatting
+│   └── index.js               # Main app page; renders login, fragment list, and form components
+├── api.js                     # Contains API utility to make authenticated requests to the backend
+├── auth.js                    # Handles Cognito sign-in redirect, token parsing, and user session logic
 ├── components/
-│   └── Login.jsx      # Optional login form using Amplify UI components
+│   ├── LoginButton.js         # Reusable button component for triggering Cognito sign-in
+│   ├── SignOutButton.js       # Reusable button component for triggering Cognito sign-out
+│   ├── FragmentList.js        # Displays a list of user fragments with a button to fetch and view data
+│   └── CreateFragmentForm.js  # Form UI to create and submit a new fragment to the backend
+
 ```
 
 ---
 
 ## 🧰 Packages & Libraries
 
-- **Next.js:** React framework for SSR and routing
-- **React:** UI rendering
-- **oidc-client-ts:** Handles OAuth2 PKCE login flow
-- **@aws-amplify/ui-react:** Optional pre-built UI components
-- **dotenv:** Loads env variables (CLI only)
+### Core Dependencies
+
+- **next**: Framework for building React apps with server-side rendering, routing, and static site generation
+- **react**: Library for building component-based user interfaces
+- **react-dom**: Entry point for DOM-related rendering paths in React
+- **bootstrap**: Provides responsive UI components and styling
+- **oidc-client-ts**: Handles OAuth2 PKCE login flow for secure authentication using Cognito
+
+### Development Dependencies
+
+- **eslint**: JavaScript linter for finding and fixing code issues
+- **eslint-config-next**: ESLint rules specifically tailored for Next.js projects
+- **@eslint/eslintrc**: ESLint configuration loader for custom setups
 
 ---
 
