@@ -9,7 +9,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 export async function getUserFragments(user) {
   console.log("Requesting user fragments data...");
   try {
-    const res = await fetch(`${apiUrl}/v1/fragments`, {
+    const res = await fetch(`${apiUrl}/v1/fragments?expand=1`, {
       // Generate headers with the proper Authorization bearer token to pass.
       // We are using the `authorizationHeaders()` helper method we defined
       // earlier, to automatically attach the user's ID token.

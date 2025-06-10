@@ -1,46 +1,50 @@
-import { signIn, getUser } from "../auth";
 import { useState, useEffect } from "react";
+import { getUser } from "../auth";
 import { getUserFragments } from "../api";
+import FragmentList from "../components/FragmentList";
+import CreateFragmentForm from "../components/CreateFragmentForm";
+import LoginButton from "../components/LoginButton";
+import SignOutButton from "../components/SignOutButton";
 
 export default function Home() {
   const [user, setUser] = useState(null);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    await signIn(); // Redirect to Cognito Hosted UI via oidc-client-ts
-  };
+  const [fragments, setFragments] = useState([]);
 
   useEffect(() => {
     getUser().then(async (user) => {
       setUser(user);
-
       if (user) {
-        const fragments = await getUserFragments(user);
-        console.log("User fragments:", fragments);
-        // You can setFragments(fragments) later to display them
+        const result = await getUserFragments(user);
+        setFragments(result.fragments);
       }
     });
   }, []);
 
+  const handleNewFragment = (newFragment) => {
+    // Add new fragment to the top of the list
+    setFragments((prev) => [newFragment, ...prev]);
+  };
+
   return (
     <main>
-      <div className="text-bg-dark p-3 text-center py-5 ">Fragments UI</div>
+      <div className="text-bg-dark p-3 text-center py-5">Fragments UI</div>
 
       {!user ? (
-        <div className=" d-grid gap-2 col-4 mx-auto pt-5">
-          <button
-            onClick={handleLogin}
-            type="button"
-            className="btn btn-success"
-          >
-            Login
-          </button>
-        </div>
+        <LoginButton />
       ) : (
-        <section>
-          <h2>Welcome, {user.username}!</h2>
-          <p>Email: {user.email}</p>
-        </section>
+        <div className="container pt-4">
+          <section className="text-center">
+            <h2>Welcome, {user.username}!</h2>
+            <p>Email: {user.email}</p>
+            <SignOutButton />
+          </section>
+
+          <CreateFragmentForm
+            user={user}
+            onFragmentCreated={handleNewFragment}
+          />
+          <FragmentList fragments={fragments} user={user} />
+        </div>
       )}
     </main>
   );
