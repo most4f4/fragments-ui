@@ -14,15 +14,26 @@ export default function Home() {
     getUser().then(async (user) => {
       setUser(user);
       if (user) {
-        const result = await getUserFragments(user);
-        setFragments(result.fragments);
+        try {
+          const result = await getUserFragments(user);
+          // Safely access fragments with fallback
+          setFragments(result?.fragments || []);
+        } catch (error) {
+          console.error("Error fetching fragments:", error);
+          setFragments([]);
+        }
       }
     });
   }, []);
 
-  const handleNewFragment = (newFragment) => {
-    // Add new fragment to the top of the list
-    setFragments((prev) => [newFragment, ...prev]);
+  const handleNewFragment = async (newFragment) => {
+    // Instead of just adding the new fragment, refresh the entire list
+    try {
+      const result = await getUserFragments(user);
+      setFragments(result?.fragments || []);
+    } catch (error) {
+      console.error("Error refreshing fragments:", error);
+    }
   };
 
   return (

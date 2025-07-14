@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createFragment } from "../api";
 
 export default function CreateFragmentForm({ user, onFragmentCreated }) {
   const [show, setShow] = useState(false);
@@ -28,30 +29,14 @@ export default function CreateFragmentForm({ user, onFragmentCreated }) {
     }
 
     try {
-      const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
-        }/v1/fragments`,
-        {
-          method: "POST",
-          headers: user.authorizationHeaders(contentType),
-          body: content,
-        }
-      );
+      // Use the createFragment function from api.js instead of direct fetch
+      const fragment = await createFragment(user, content, contentType);
 
-      if (res.ok) {
-        const { fragment } = await res.json();
-        onFragmentCreated(fragment); // notify parent
-        setContent("");
-        setContentType("text/plain");
-        setShow(false); // close modal
-        alert("Fragment created successfully!");
-      } else {
-        const errorText = await res.text();
-        alert(
-          `Failed to create fragment: ${res.status} ${res.statusText}\n${errorText}`
-        );
-      }
+      onFragmentCreated(fragment); // notify parent
+      setContent("");
+      setContentType("text/plain");
+      setShow(false); // close modal
+      alert("Fragment created successfully!");
     } catch (error) {
       alert(`Error creating fragment: ${error.message}`);
     }
@@ -149,7 +134,7 @@ export default function CreateFragmentForm({ user, onFragmentCreated }) {
                   {/* File Upload Option */}
                   <div className="mb-3">
                     <label htmlFor="fileUpload" className="form-label">
-                      Upload File (Optional)
+                      Upload File
                     </label>
                     <input
                       type="file"

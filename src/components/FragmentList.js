@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getFragment } from "../api";
 
 export default function FragmentList({ fragments, user }) {
   const [fragmentData, setFragmentData] = useState({});
@@ -6,17 +7,13 @@ export default function FragmentList({ fragments, user }) {
   const loadFragmentData = async (id) => {
     if (fragmentData[id]) return; // already loaded
 
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
-      }/v1/fragments/${id}`,
-      {
-        headers: user.authorizationHeaders(),
-      }
-    );
-
-    const text = await res.text(); // assume plain text for now
-    setFragmentData((prev) => ({ ...prev, [id]: text }));
+    try {
+      const text = await getFragment(user, id);
+      setFragmentData((prev) => ({ ...prev, [id]: text }));
+    } catch (error) {
+      console.error(`Error loading fragment ${id}:`, error);
+      // Optionally set error state or show user feedback
+    }
   };
 
   return (
