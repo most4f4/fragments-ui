@@ -1,0 +1,11 @@
+.github/
+.vscode/
+coverage/
+node_modules/
+.git/
+.gitignore
+.env
+.next/
+README.md
+coverage/
+
