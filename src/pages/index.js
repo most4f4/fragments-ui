@@ -26,14 +26,24 @@ export default function Home() {
     });
   }, []);
 
-  const handleNewFragment = async (newFragment) => {
-    // Instead of just adding the new fragment, refresh the entire list
+  const refreshFragments = async () => {
+    if (!user) return;
+
     try {
       const result = await getUserFragments(user);
       setFragments(result?.fragments || []);
     } catch (error) {
       console.error("Error refreshing fragments:", error);
+      setFragments([]);
     }
+  };
+
+  const handleNewFragment = async (newFragment) => {
+    await refreshFragments();
+  };
+
+  const handleFragmentChanged = async () => {
+    await refreshFragments();
   };
 
   return (
@@ -54,7 +64,11 @@ export default function Home() {
             user={user}
             onFragmentCreated={handleNewFragment}
           />
-          <FragmentList fragments={fragments} user={user} />
+          <FragmentList
+            fragments={fragments}
+            user={user}
+            onFragmentChanged={handleFragmentChanged}
+          />
         </div>
       )}
     </main>
