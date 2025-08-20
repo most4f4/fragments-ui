@@ -1,4 +1,4 @@
-# Fragments UI
+# CloudDocs
 
 A simple **React + Next.js** frontend for testing and interacting with the secure fragments microservice using **Amazon Cognito** for user authentication and **OIDC (OpenID Connect)**.
 
