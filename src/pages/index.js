@@ -1,14 +1,16 @@
+// src/pages/index.js
 import { useState, useEffect } from "react";
 import { getUser } from "../auth";
 import { getUserFragments } from "../api";
 import FragmentList from "../components/FragmentList";
 import CreateFragmentForm from "../components/CreateFragmentForm";
-import LoginButton from "../components/LoginButton";
-import SignOutButton from "../components/SignOutButton";
+import LandingPage from "../components/LandingPage";
+import Dashboard from "../components/Dashboard";
 
 export default function Home() {
   const [user, setUser] = useState(null);
   const [fragments, setFragments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getUser().then(async (user) => {
@@ -23,6 +25,7 @@ export default function Home() {
           setFragments([]);
         }
       }
+      setLoading(false);
     });
   }, []);
 
@@ -46,31 +49,45 @@ export default function Home() {
     await refreshFragments();
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <main>
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: "100vh" }}
+        >
+          <div className="text-center">
+            <div className="spinner-border text-primary mb-3" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p>Loading Fragments...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Show landing page for non-authenticated users
+  if (!user) {
+    return (
+      <main>
+        <LandingPage />
+      </main>
+    );
+  }
+
+  // Show dashboard for authenticated users
   return (
     <main>
-      <div className="text-bg-dark p-3 text-center py-5">Fragments UI</div>
-
-      {!user ? (
-        <LoginButton />
-      ) : (
-        <div className="container pt-4">
-          <section className="text-center">
-            <h2>Welcome, {user.username}!</h2>
-            <p>Email: {user.email}</p>
-            <SignOutButton />
-          </section>
-
-          <CreateFragmentForm
-            user={user}
-            onFragmentCreated={handleNewFragment}
-          />
-          <FragmentList
-            fragments={fragments}
-            user={user}
-            onFragmentChanged={handleFragmentChanged}
-          />
-        </div>
-      )}
+      <Dashboard user={user} fragments={fragments}>
+        <CreateFragmentForm user={user} onFragmentCreated={handleNewFragment} />
+        <FragmentList
+          fragments={fragments}
+          user={user}
+          onFragmentChanged={handleFragmentChanged}
+        />
+      </Dashboard>
     </main>
   );
 }
