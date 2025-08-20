@@ -1,18 +1,40 @@
 // src/components/LoginButton.js
-import React from "react";
+import React, { useState } from "react";
 import { signIn } from "../auth";
+import styles from "../styles/LoginButton.module.css";
 
 export default function LoginButton() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    await signIn();
+    setIsLoading(true);
+    try {
+      await signIn();
+    } catch (error) {
+      console.error("Login error:", error);
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="d-grid gap-2 col-4 mx-auto pt-5">
-      <button onClick={handleLogin} type="button" className="btn btn-success">
-        Login
-      </button>
-    </div>
+    <button
+      onClick={handleLogin}
+      disabled={isLoading}
+      className={styles.loginButton}
+    >
+      {isLoading ? (
+        <>
+          <span
+            className="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          Signing in...
+        </>
+      ) : (
+        <>🚀 Get Started</>
+      )}
+    </button>
   );
 }
