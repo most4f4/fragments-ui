@@ -1,120 +1,392 @@
-# CloudDocs
+# CloudDocs - UI
 
-A simple **React + Next.js** frontend for testing and interacting with the secure fragments microservice using **Amazon Cognito** for user authentication and **OIDC (OpenID Connect)**.
-
----
-
-## ⚙️ Setup Instructions
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/most4f4/fragments-ui.git
-cd fragments-ui
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Environment Configuration
-
-Create a `.env.local` file in the root directory:
-
-```
-NEXT_PUBLIC_AWS_COGNITO_POOL_ID=us-east-1_abc123
-NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID=xyz456exampleclientid
-NEXT_PUBLIC_COGNITO_DOMAIN=your-cognito-domain.auth.us-east-1.amazoncognito.com
-NEXT_PUBLIC_OAUTH_SIGN_IN_REDIRECT_URL=http://localhost:3000
-API_URL=http://localhost:8080
-```
+A modern **React + Next.js** frontend for securely managing, converting, and interacting with the Fragments microservice using **Amazon Cognito** authentication and **OIDC (OpenID Connect)**.
 
 ---
 
-## 🧪 Testing Auth Flow
+## 🌟 Features
 
-1. Run the frontend:
+### 🔐 Secure Authentication
 
-```bash
-npm run dev
-```
+- **AWS Cognito Integration**: Enterprise-grade authentication with OIDC
+- **Authorization Code Flow with PKCE**: Industry-standard security implementation
+- **Seamless Login/Logout**: Hosted UI for user management
 
-2. Open browser: [http://localhost:3000](http://localhost:3000)
+### 📄 Fragment Management
 
-3. Click **Login** — user will be redirected to Cognito Hosted UI.
+- **Create Fragments**: Support for multiple content types (text, data, images)
+- **View & Edit**: Real-time content editing with validation
+- **Delete Operations**: Secure fragment removal with confirmations
+- **Smart Upload**: Auto-detection of file types and content validation
 
-4. After successful login, the app will:
-   - Display the user's email/username
-   - Call the fragments microservice with the Bearer token
-   - Log response to browser console
+### 🔄 Real-time Conversion
+
+- **Multi-format Support**: Convert between compatible formats instantly
+- **Live Previews**: See converted content before downloading
+- **Image Processing**: Convert between PNG, JPEG, WebP, GIF, AVIF formats
+- **Text Transformations**: Markdown to HTML, CSV to JSON, JSON to YAML
+
+### 📊 Professional Dashboard
+
+- **Usage Statistics**: Track fragments by type and count
+- **User Management**: Display authenticated user information
+- **Responsive Design**: Modern, mobile-friendly interface
+- **Visual Feedback**: Loading states and error handling
+
+### 🎨 Modern UI/UX
+
+- **Bootstrap Integration**: Professional styling and components
+- **Modular CSS**: Custom styling with CSS modules
+- **Interactive Elements**: Hover effects and smooth transitions
+- **Accessibility**: Semantic markup and keyboard navigation
 
 ---
 
-## 🔐 Authentication
+## 📸 Screenshots
 
-Authentication is handled via **Amazon Cognito** using the **Authorization Code Flow with PKCE**.
+**Landing Page**  
+![Landing Page](images/img1.png)
 
-- User logs in via the Hosted UI
-- Cognito redirects back to the app with `?code=...`
-- `oidc-client-ts` exchanges it for tokens
-- Authenticated requests are sent to the backend using:
+**AWS Cognito Sign In Page**  
+![AWS Cognito Sign In Page](images/img2.png)
 
-```http
-Authorization: Bearer <id_token>
-```
+**Home Page Displaying Fragments Stored in AWS S3**  
+![Home Page Displaying Fragments Stored in AWS S3](images/img3.png)
+
+**Creating New Fragment**  
+![Creating New Fragment](images/img4.png)
+
+**Fragment Conversion between formats**  
+![Fragment Conversion](images/img5.png)
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Technical Stack
+
+- **Framework**: Next.js 15.3.2 with React 19.0.0
+- **Authentication**: AWS Cognito with oidc-client-ts 3.2.1
+- **Styling**: Bootstrap 5.3.6 + Custom CSS Modules
+- **Build Tool**: Next.js built-in bundling and optimization
+- **Container**: Docker with multi-stage builds for production
+
+---
+
+## 📁 Project Architecture
 
 ```
 /src
 ├── pages/
-│   └── index.js               # Main app page; renders login, fragment list, and form components
-├── api.js                     # Contains API utility to make authenticated requests to the backend
-├── auth.js                    # Handles Cognito sign-in redirect, token parsing, and user session logic
+│   ├── index.js                    # Main application entry point
+│   ├── _app.js                     # Global app configuration
+│   ├── _document.js                # HTML document structure
+│   └── api/hello.js                # Next.js API route example
 ├── components/
-│   ├── LoginButton.js         # Reusable button component for triggering Cognito sign-in
-│   ├── SignOutButton.js       # Reusable button component for triggering Cognito sign-out
-│   ├── FragmentList.js        # Displays a list of user fragments with a button to fetch and view data
-│   └── CreateFragmentForm.js  # Form UI to create and submit a new fragment to the backend
-
+│   ├── Dashboard.js                # Main dashboard layout
+│   ├── LandingPage.js              # Unauthenticated user landing
+│   ├── LoginButton.js              # Authentication trigger
+│   ├── SignOutButton.js            # Logout functionality
+│   ├── CreateFragmentForm.js       # Fragment creation modal
+│   ├── EditFragmentForm.js         # Fragment editing interface
+│   ├── FragmentList.js             # Fragment display and management
+│   ├── FragmentConverter.js        # Format conversion controls
+│   ├── StatsCard.js                # Dashboard statistics
+│   └── FeatureCard.js              # Landing page features
+├── styles/
+│   ├── globals.css                 # Global styles
+│   ├── Dashboard.module.css        # Dashboard-specific styles
+│   ├── LandingPage.module.css      # Landing page styles
+│   ├── LoginButton.module.css      # Login button styles
+│   └── FeatureCard.module.css      # Feature card styles
+├── auth.js                         # Cognito authentication logic
+└── api.js                          # Backend API communication
 ```
 
 ---
 
-## 🧰 Packages & Libraries
+## 🚀 Getting Started
 
-### Core Dependencies
+### Prerequisites
 
-- **next**: Framework for building React apps with server-side rendering, routing, and static site generation
-- **react**: Library for building component-based user interfaces
-- **react-dom**: Entry point for DOM-related rendering paths in React
-- **bootstrap**: Provides responsive UI components and styling
-- **oidc-client-ts**: Handles OAuth2 PKCE login flow for secure authentication using Cognito
+- **Node.js**: Version 22.12.0 or later
+- **npm**: Latest version
+- **AWS Cognito**: Configured user pool and client
+- **Fragments Backend**: Running microservice instance
 
-### Development Dependencies
+### 1. Environment Configuration
 
-- **eslint**: JavaScript linter for finding and fixing code issues
-- **eslint-config-next**: ESLint rules specifically tailored for Next.js projects
-- **@eslint/eslintrc**: ESLint configuration loader for custom setups
+Create a `.env.local` file in the root directory:
+
+```env
+# AWS Cognito Configuration
+NEXT_PUBLIC_AWS_COGNITO_POOL_ID=us-east-1_abc123def
+NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID=1a2b3c4d5e6f7g8h9i0j
+NEXT_PUBLIC_COGNITO_DOMAIN=your-domain.auth.us-east-1.amazoncognito.com
+NEXT_PUBLIC_OAUTH_SIGN_IN_REDIRECT_URL=http://localhost:3000
+
+# Backend API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
+
+### 2. Installation & Development
+
+```bash
+# Clone the repository
+git clone https://github.com/most4f4/fragments-ui.git
+cd fragments-ui
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Open browser
+open http://localhost:3000
+```
+
+### 3. Production Build
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
 
 ---
 
-## ✅ Example Secure Request
+## 🐳 Docker Deployment
 
-```js
-const res = await fetch("http://localhost:8080/v1/fragments", {
+### Multi-stage Docker Build
+
+```bash
+# Build the Docker image with build arguments
+docker build \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.yourdomain.com \
+  --build-arg NEXT_PUBLIC_AWS_COGNITO_POOL_ID=us-east-1_abc123 \
+  --build-arg NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID=xyz456 \
+  --build-arg NEXT_PUBLIC_OAUTH_SIGN_IN_REDIRECT_URL=https://yourdomain.com \
+  --build-arg NEXT_PUBLIC_COGNITO_DOMAIN=yourdomain.auth.us-east-1.amazoncognito.com \
+  -t fragments-ui .
+
+# Run the container
+docker run -p 3000:3000 fragments-ui
+```
+
+### Docker Features
+
+- **Multi-stage builds**: Optimized production images
+- **Build-time configuration**: Environment variables baked into build
+- **Slim runtime**: Node.js slim base for reduced image size
+- **Security**: Non-root user execution
+
+---
+
+## 🔐 Authentication Flow
+
+### OIDC Implementation
+
+1. **User clicks login** → Redirected to Cognito Hosted UI
+2. **User authenticates** → Cognito returns authorization code
+3. **Code exchange** → Application exchanges code for tokens
+4. **Secure requests** → All API calls include Bearer token
+
+### Token Management
+
+```javascript
+// Example authenticated request
+const response = await fetch(`${API_URL}/v1/fragments`, {
   headers: user.authorizationHeaders(),
 });
 ```
 
 ---
 
-## 📸 Notes
+## 📝 Supported Fragment Types
 
-- Fragments UI is meant for **testing auth flows** and **sending secure API calls**
-- It is not a production-ready frontend
-- Uses memory storage (not localStorage) for tokens by default
+### Text Formats
+
+- **Plain Text** (`text/plain`)
+- **Markdown** (`text/markdown`) → HTML conversion
+- **HTML** (`text/html`) → Plain text extraction
+- **CSV** (`text/csv`) → JSON conversion
+
+### Data Formats
+
+- **JSON** (`application/json`) → YAML conversion
+- **YAML** (`application/yaml`) → Plain text
+
+### Image Formats
+
+- **PNG** (`image/png`)
+- **JPEG** (`image/jpeg`)
+- **WebP** (`image/webp`)
+- **GIF** (`image/gif`)
+- **AVIF** (`image/avif`)
+
+### Conversion Matrix
+
+| From      | To               | Notes                |
+| --------- | ---------------- | -------------------- |
+| Markdown  | HTML, Plain Text | Live rendering       |
+| CSV       | JSON, Plain Text | Structured parsing   |
+| JSON      | YAML, Plain Text | Pretty formatting    |
+| Any Image | Any Image        | Cross-format support |
+
+---
+
+## 🎯 Key Features Deep Dive
+
+### Fragment Creation
+
+- **Smart Upload**: Automatic content type detection
+- **Validation**: Real-time content validation and feedback
+- **Preview**: Live preview for supported formats
+- **Error Handling**: Comprehensive error messages and recovery
+
+### Fragment Management
+
+- **CRUD Operations**: Complete create, read, update, delete functionality
+- **Batch Operations**: Multiple fragment selection and management
+- **Search & Filter**: Find fragments by type, content, or metadata
+- **Sorting**: Organize by creation date, size, or type
+
+### Conversion Engine
+
+- **On-demand Conversion**: Convert without affecting original
+- **Caching**: Client-side caching of converted content
+- **Download Support**: Direct download of converted formats
+- **Error Recovery**: Graceful handling of conversion failures
+
+### User Experience
+
+- **Responsive Design**: Mobile-first responsive layout
+- **Loading States**: Visual feedback for all operations
+- **Error Boundaries**: Graceful error handling and recovery
+- **Accessibility**: WCAG 2.1 compliant interface
+
+---
+
+## 🧪 API Integration
+
+### Core Endpoints
+
+```javascript
+// Get all fragments
+GET /v1/fragments?expand=1
+
+// Create fragment
+POST /v1/fragments
+Content-Type: text/markdown
+Body: "# Hello World"
+
+// Get fragment data
+GET /v1/fragments/:id
+
+// Convert fragment
+GET /v1/fragments/:id.html
+
+// Update fragment
+PUT /v1/fragments/:id
+Content-Type: text/markdown
+Body: "# Updated Content"
+
+// Delete fragment
+DELETE /v1/fragments/:id
+```
+
+### Error Handling
+
+- **Network Errors**: Automatic retry with exponential backoff
+- **Authentication**: Token refresh and re-authentication
+- **Validation**: Client-side and server-side validation
+- **User Feedback**: Clear error messages and recovery options
+
+---
+
+## 🔧 Development Tools
+
+### Code Quality
+
+- **ESLint**: Code linting with Next.js configuration
+- **Prettier**: Code formatting (can be added)
+- **TypeScript**: Can be migrated for type safety
+
+### Build Optimization
+
+- **Tree Shaking**: Automatic dead code elimination
+- **Code Splitting**: Automatic route-based splitting
+- **Image Optimization**: Built-in Next.js image optimization
+- **Bundle Analysis**: npm run build provides bundle insights
+
+---
+
+## 🌐 Production Considerations
+
+### Performance
+
+- **Server-Side Rendering**: Next.js SSR for faster initial loads
+- **Static Generation**: Pre-built pages where applicable
+- **CDN Ready**: Optimized for content delivery networks
+- **Caching**: Proper cache headers and strategies
+
+### Security
+
+- **HTTPS Enforcement**: Production requires HTTPS
+- **CORS Configuration**: Proper cross-origin setup
+- **Token Security**: Secure token storage and transmission
+- **Content Security Policy**: CSP headers for XSS protection
+
+### Monitoring
+
+- **Error Tracking**: Integration-ready for Sentry, LogRocket
+- **Analytics**: Google Analytics or similar integration
+- **Performance**: Web Vitals monitoring
+- **Uptime**: Health check endpoints
+
+---
+
+## 🤝 Contributing
+
+### Development Workflow
+
+1. **Fork** the repository
+2. **Create** feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to branch (`git push origin feature/amazing-feature`)
+5. **Open** Pull Request
+
+### Code Standards
+
+- Follow ESLint configuration
+- Use semantic commit messages
+- Add JSDoc comments for complex functions
+- Update README for new features
+
+---
+
+## 📄 License
+
+This project is **UNLICENSED** and developed for educational purposes.
+
+---
+
+## 🆘 Support
+
+### Documentation
+
+- **Next.js**: [nextjs.org/docs](https://nextjs.org/docs)
+- **AWS Cognito**: [docs.aws.amazon.com/cognito](https://docs.aws.amazon.com/cognito/)
+- **Bootstrap**: [getbootstrap.com](https://getbootstrap.com)
+
+### Troubleshooting
+
+- **Authentication Issues**: Check Cognito configuration and redirect URLs
+- **CORS Errors**: Verify backend CORS settings
+- **Build Failures**: Check Node.js version and dependencies
+- **Environment Variables**: Ensure all required variables are set
+
+---
+
+**Built with ❤️ using React, Next.js, and AWS Cognito**
